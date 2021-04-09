@@ -1,0 +1,22 @@
+{
+    "name": "dathard/module-logcleaner",
+    "description": "Log Cleaner",
+    "type": "magento2-module",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Dathard",
+            "email": "dathard@yahoo.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Dathard\\LogCleaner\\": ""
+        }
+    }
+}
