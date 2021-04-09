@@ -9,8 +9,7 @@ use Magento\Framework\Filesystem\Driver\File;
 
 class Cleaner
 {
-    public static $allowedArchivesCount = 2;
-
+    public static $allowedArchivesCount = 7;
 
     /**
      * @var DirectoryList

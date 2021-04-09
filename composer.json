@@ -1,12 +1,12 @@
 {
     "name": "dathard/module-logcleaner",
-    "description": "1",
+    "description": "Log Cleaner",
     "type": "magento2-module",
     "license": "proprietary",
     "authors": [
         {
-            "name": "Mage2Gen",
-            "email": "info@mage2gen.com"
+            "name": "Dathard",
+            "email": "dathard@yahoo.com"
         }
     ],
     "minimum-stability": "dev",
