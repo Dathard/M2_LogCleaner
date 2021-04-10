@@ -101,24 +101,24 @@ class Cleaner
         }
 
         switch ($this->config->getRotationPeriod()) {
-            case 2:
-                $alow = date('d') == 1;
+            case 0:
+                $archives = $this->prepareArchivesData();
+                arsort($archives);
+                $lastDate = array_shift($archives);
+                $alow = date('d') != date('d', $lastDate);
                 break;
             case 1:
                 $alow = date('w') == 1;
                 break;
+            case 2:
+                $alow = date('d') == 1;
+                break;
             default:
-                if ($this->prepareArchivesData() === 0) {
-                    $periodInDays = 1;
-                } else {
-                    $periodInDays = $this->config->getCustomPeriod();
-                }
-
                 $archives = $this->prepareArchivesData();
                 arsort($archives);
                 $lastDate = array_shift($archives);
                 $dateDiff = abs(time() - $lastDate) / 86400;
-                $alow = $dateDiff >= $periodInDays;
+                $alow = $dateDiff >= $this->config->getCustomPeriod();
         }
 
         return $alow;
