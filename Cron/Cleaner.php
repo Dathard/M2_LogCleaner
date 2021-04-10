@@ -3,13 +3,21 @@ declare(strict_types=1);
 
 namespace Dathard\LogCleaner\Cron;
 
+use Dathard\LogCleaner\Helper\Config;
 use Magento\Framework\Archive\Zip;
 use Magento\Framework\Filesystem\DirectoryList;
 use Magento\Framework\Filesystem\Driver\File;
+use Magento\Framework\Filesystem\Glob;
+use phpDocumentor\Reflection\Types\This;
 
 class Cleaner
 {
     public static $allowedArchivesCount = 7;
+
+    /**
+     * @var Config
+     */
+    protected $config;
 
     /**
      * @var DirectoryList
@@ -33,10 +41,12 @@ class Cleaner
      * @param Zip $zipArchive
      */
     public function __construct(
+        Config $config,
         DirectoryList $dir,
         File $filesystemDriver,
         Zip $zipArchive
     ) {
+        $this->config = $config;
         $this->dir = $dir;
         $this->filesystemDriver = $filesystemDriver;
         $this->zipArchive = $zipArchive;
@@ -47,13 +57,71 @@ class Cleaner
      */
     public function execute()
     {
-        foreach ($this->filesystemDriver->readDirectory($this->dir->getPath('log')) as $filePath) {
-            if (preg_match('/(.*?)+\.log$/', $filePath)){
-                $this->archivateFile($filePath);
+        if ($this->config->isModuleEnabled()) {
+            if ($this->allowedToArchivate()) {
+                foreach ($this->filesystemDriver->readDirectory($this->dir->getPath('log')) as $filePath) {
+                    if (preg_match('/(.*?)+\.log$/', $filePath)){
+                        $this->archivateFile($filePath);
+                    }
+                }
+            }
+
+            $this->deleteOldArchives();
+        }
+    }
+
+    /**
+     * @return array
+     * @throws \Magento\Framework\Exception\FileSystemException
+     */
+    public function prepareArchivesData()
+    {
+        $archivesData = [];
+        $logDir = $this->dir->getPath('log');
+
+        foreach (Glob::glob($logDir . '/logs_from_*_*_*.zip') as $filePath) {
+            if (preg_match('/([a-zA-Z_-]+)_([0-9]+)_([0-9]+)_([0-9]+).zip/', $filePath, $found)) {
+                array_shift($found);
+                list($type, $month, $day, $year) = $found;
+                $archivesData[$filePath] = strtotime( $year.'-'.$month.'-'.$day );
             }
         }
 
-        $this->deleteOldArchives();
+        return $archivesData;
+    }
+
+    /**
+     * @return bool
+     * @throws \Magento\Framework\Exception\FileSystemException
+     */
+    public function allowedToArchivate(): bool
+    {
+        if (! $this->config->isModuleEnabled()) {
+            return false;
+        }
+
+        switch ($this->config->getRotationPeriod()) {
+            case 2:
+                $alow = date('d') == 1;
+                break;
+            case 1:
+                $alow = date('w') == 1;
+                break;
+            default:
+                if ($this->prepareArchivesData() === 0) {
+                    $periodInDays = 1;
+                } else {
+                    $periodInDays = $this->config->getCustomPeriod();
+                }
+
+                $archives = $this->prepareArchivesData();
+                arsort($archives);
+                $lastDate = array_shift($archives);
+                $dateDiff = abs(time() - $lastDate) / 86400;
+                $alow = $dateDiff >= $periodInDays;
+        }
+
+        return $alow;
     }
 
     /**
@@ -86,25 +154,18 @@ class Cleaner
      */
     private function deleteOldArchives()
     {
-        $archives = [];
-
-        foreach ($this->filesystemDriver->readDirectory($this->dir->getPath('log')) as $filePath) {
-            if (preg_match('/([a-zA-Z_-]+)_([0-9]+)_([0-9]+)_([0-9]+).zip/', $filePath, $found)) {
-                array_shift($found);
-                list($type, $month, $day, $year) = $found;
-                $archives[$filePath] = strtotime( $year.'-'.$month.'-'.$day );
-            }
-        }
+        $archives = $this->prepareArchivesData();
+        $allowedArchivesCount = $this->config->getAllowedArchivesCount();
 
         if (! sizeof($archives)
-            || sizeof($archives) <= self::$allowedArchivesCount) {
+            || sizeof($archives) <= $allowedArchivesCount) {
             return true;
         }
 
         arsort($archives);
         end($archives);
 
-        for ($i = 1; $i <= sizeof($archives) - self::$allowedArchivesCount; $i++) {
+        for ($i = 1; $i <= sizeof($archives) - $allowedArchivesCount; $i++) {
             $filePath = key($archives);
             if ($this->filesystemDriver->isExists($filePath)) {
                 $this->filesystemDriver->deleteFile($filePath);

@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="dathard" translate="label" sortOrder="10">
+            <label>Dathard</label>
+        </tab>
+        <section id="logcleaner" translate="label" sortOrder="10" showInDefault="1">
+            <class>separator-top</class>
+            <label>Log Cleaner</label>
+            <tab>dathard</tab>
+            <resource>Dathard_LogCleaner::config</resource>
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1">
+                <label>Log cleaner configuration</label>
+                <field id="enable" translate="label" type="select" sortOrder="1" showInDefault="1">
+                    <label>Module Enable</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="period" translate="label" type="select" sortOrder="20" showInDefault="1">
+                    <label>Rotation period</label>
+                    <source_model>Dathard\LogCleaner\Model\Config\Source\Period</source_model>
+                </field>
+                <field id="custom_period" translate="label" type="text" sortOrder="30" showInDefault="1">
+                    <label>Custom period</label>
+                    <comment><![CDATA[Specify the period in days.]]></comment>
+                    <validate>integer</validate>
+                    <depends>
+                        <field id="period">3</field>
+                    </depends>
+                </field>
+                <field id="allowed_archives_count" translate="label" type="text" sortOrder="30" showInDefault="1">
+                    <label>Number of saved files</label>
+                    <comment><![CDATA[Specify how many recent log files should be kept.]]></comment>
+                    <validate>integer</validate>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <logcleaner>
+            <general>
+                <enable>0</enable>
+                <period>1</period>
+                <custom_period></custom_period>
+                <allowed_archives_count>7</allowed_archives_count>
+            </general>
+        </logcleaner>
+    </default>
+</config>
