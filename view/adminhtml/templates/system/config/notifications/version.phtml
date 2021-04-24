@@ -1,0 +1,47 @@
+<style>
+    #message-notice
+    {
+        position: relative;
+        padding: 1.5rem 0 1.5rem 4.5rem;
+        border: 1px solid #d1d1d1;
+        border-radius: 3px;
+        background: #fffbbb;
+    }
+    #message-notice:before
+    {
+        font-family: 'Admin Icons';
+        font-size: 1.9rem;
+        position: absolute;
+        top: 50%;
+        left: 1rem;
+        content: '\e623';
+        -webkit-transform: translate(0, -50%);
+        -ms-transform: translate(0, -50%);
+        transform: translate(0, -50%);
+        color: #eb5202;
+        border: 0;
+        background: none;
+    }
+</style>
+
+<div id="message-notice">
+    A new version of Log Cleaner for Magento 2 (v<?= $block->getLatestVersion() ?>) is available.
+    Download update from the <a href="<?= $block->getRepositoryUrl() ?>" target="_blank">project repository</a> to stay up-to-date.
+    See extension
+    <a id="change-logs" onclick href="#">change log</a>
+    for more details.
+</div>
+
+<script type="text/javascript">
+    require([ 'jquery'], function($) {
+        $('#message-notice #change-logs').click(function(e) {
+            e.preventDefault();
+
+            alert('change logs');
+        });
+    });
+</script>
+
+
+
+

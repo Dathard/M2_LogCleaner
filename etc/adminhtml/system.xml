@@ -4,11 +4,18 @@
         <tab id="dathard" translate="label" sortOrder="10">
             <label>Dathard</label>
         </tab>
-        <section id="logcleaner" translate="label" sortOrder="10" showInDefault="1">
+
+        <section id="logcleaner" translate="label" sortOrder="1" showInDefault="1">
             <class>separator-top</class>
             <label>Log Cleaner</label>
             <tab>dathard</tab>
             <resource>Dathard_LogCleaner::config</resource>
+
+            <group id="base" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="0">
+                <frontend_model>Dathard\LogCleaner\Block\Adminhtml\System\Config\Messages</frontend_model>
+                <attribute type="shared">1</attribute>
+            </group>
+
             <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1">
                 <label>Log cleaner configuration</label>
                 <field id="enable" translate="label" type="select" sortOrder="1" showInDefault="1">
