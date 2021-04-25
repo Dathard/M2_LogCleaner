@@ -36,7 +36,6 @@ class Data extends AbstractHelper
      */
     public function getVersion(): string
     {
-        return '1.0.0';
         return (string) $this->moduleList
             ->getOne(self::MODULE_NAME)['setup_version'];
     }
