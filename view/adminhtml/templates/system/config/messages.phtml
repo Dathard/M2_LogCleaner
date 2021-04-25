@@ -1,0 +1,9 @@
+<div id="messages-section"></div>
+
+<script type="text/javascript">
+    require([ 'jquery'], function($) {
+        $.get("<?= $block->getUrl('dtlogcleaner/module/notifications') ?>", function(data) {
+            $("#messages-section").html(data.html);
+        });
+    });
+</script>
