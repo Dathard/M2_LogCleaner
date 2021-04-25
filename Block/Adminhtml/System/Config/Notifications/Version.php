@@ -53,8 +53,6 @@ class Version extends Template
     {
         $currentVersion = $this->dataHelper->getVersion();
 
-        $currentVersion = '1.0.0';
-
         if (! version_compare($currentVersion, $this->getLatestVersion(), '<')) {
             return '';
         }

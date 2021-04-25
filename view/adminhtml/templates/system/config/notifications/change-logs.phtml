@@ -1,0 +1,31 @@
+<style>
+    .change-logs-list
+    {
+        font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-size: 14px;
+        color: #303030;
+    }
+    .change-logs-list .ver
+    {
+        padding: .7rem 1.5rem;
+        border-top: 1px solid #e3e3e3;
+        border-bottom: 1px solid #e3e3e3;
+        background: #f8f8f8;
+    }
+    .change-logs-list .description
+    {
+        line-height: 21px;
+        padding: .7rem 1.5rem;
+    }
+</style>
+
+<div class="change-logs-list">
+    <?php foreach ($block->getReleases() as $release): ?>
+        <?php if ($block->isNewerVersion($release)): ?>
+            <p class="ver"><strong>v<?= $block->getVersion($release); ?></strong> - <strong><?= $block->getPublishedDate($release) ?></strong></p>
+            <div class="description">
+                <?= $block->getReleaseDescription($release); ?>
+            </div><br>
+        <?php endif; ?>
+    <?php endforeach; ?>
+</div>

@@ -31,15 +31,58 @@
     <a id="change-logs" onclick href="#">change log</a>
     for more details.
 </div>
+<div id="change-logs-list"></div>
 
 <script type="text/javascript">
-    require([ 'jquery'], function($) {
+    require([
+        'jquery',
+        'Magento_Ui/js/modal/modal'
+    ], function($, modal) {
         $('#message-notice #change-logs').click(function(e) {
             e.preventDefault();
 
-            alert('change logs');
+            // alert('change logs');
+
+
+            $.ajax({
+                url: '<?= $block->getUrl('dtlogcleaner/module/changeLogs'); ?>',
+                showLoader: true,
+                method: 'GET',
+                success: function(data) {
+                    $('#change-logs-list').html(data.html);
+
+                    var params = {
+                        type: 'slide',
+                        responsive: true,
+                        innerScroll: true,
+                        title: 'Change Logs',
+                        buttons: [{
+                            text: $.mage.__('Close'),
+                            class: '',
+                            click: function () {
+                                this.closeModal();
+                                $('#change-logs-list').html('');
+                            }
+                        }, {
+                            text: $.mage.__('Open repository'),
+                            class: 'action-primary',
+                            click: function () {
+                                window.open('<?= $block->getRepositoryUrl() ?>', '_blank').focus()
+                            }
+                        }]
+                    };
+
+                    var popup = modal(params, $('#change-logs-list'));
+
+                    $('#change-logs-list').modal("openModal");
+                }.bind(this)
+            });
+
+
+
         });
     });
+
 </script>
 
 
