@@ -33,7 +33,7 @@ class Cleaner
 
     public function execute()
     {
-        if ($this->config->isModuleEnabled()) {
+        if ($this->config->enableLogsCleaning(Config::GROUP_FILES)) {
             $this->logManagement->optimizeLogs();
         }
     }

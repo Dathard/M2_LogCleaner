@@ -5,11 +5,13 @@ namespace Dathard\LogCleaner\Helper;
 
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Store\Model\ScopeInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
 
 class Config extends AbstractHelper
 {
     const SECTION_ID = 'logcleaner';
-    const GROUP_GENERAL = 'general';
+    const GROUP_FILES = 'log_files';
+    const GROUP_DB = 'db_logs';
 
     /**
      * Receive magento config value
@@ -33,42 +35,88 @@ class Config extends AbstractHelper
     }
 
     /**
-     * @param null $store
-     * @param null $scope
+     * @param string $logsType
      * @return bool
+     * @throws NoSuchEntityException
      */
-    public function isModuleEnabled($store = null, $scope = null): bool
+    public function enableLogsCleaning(string $logsType): bool
     {
-        return (bool) $this->getConfig(self::GROUP_GENERAL, 'enable');
+        switch ($logsType) {
+            case self::GROUP_FILES:
+                $value = $this->getConfig(self::GROUP_FILES, 'enable');
+                break;
+            case self::GROUP_DB:
+                $value = $this->getConfig(self::GROUP_DB, 'enable');;
+                break;
+            default:
+                throw new NoSuchEntityException(
+                    __('Invalid log type "%1".', $logsType)
+                );
+        }
+
+        return (bool) $value;
     }
 
     /**
-     * @param null $store
-     * @param null $scope
+     * @param string $logsType
      * @return int
+     * @throws NoSuchEntityException
      */
-    public function getRotationPeriod($store = null, $scope = null): int
+    public function getRotationPeriod(string $logsType): int
     {
-        return (int) $this->getConfig(self::GROUP_GENERAL, 'period');
+        switch ($logsType) {
+            case self::GROUP_FILES:
+                $value = $this->getConfig(self::GROUP_FILES, 'period');
+                break;
+            case self::GROUP_DB:
+                $value = $this->getConfig(self::GROUP_DB, 'period');;
+                break;
+            default:
+                throw new NoSuchEntityException(
+                    __('Invalid log type "%1".', $logsType)
+                );
+        }
+
+        return (int) $value;
     }
 
     /**
-     * @param null $store
-     * @param null $scope
+     * @param string $logsType
      * @return int
+     * @throws NoSuchEntityException
      */
-    public function getCustomPeriod($store = null, $scope = null): int
+    public function getCustomRotationPeriod(string $logsType): int
     {
-        return (int) abs($this->getConfig(self::GROUP_GENERAL, 'custom_period'));
+        switch ($logsType) {
+            case self::GROUP_FILES:
+                $value = $this->getConfig(self::GROUP_FILES, 'custom_period');
+                break;
+            default:
+                throw new NoSuchEntityException(
+                    __('Invalid log type "%1".', $logsType)
+                );
+        }
+
+        return (int) $value;
     }
 
     /**
-     * @param null $store
-     * @param null $scope
+     * @param string $logsType
      * @return int
+     * @throws NoSuchEntityException
      */
-    public function getAllowedArchivesCount($store = null, $scope = null): int
+    public function getAllowedArchivesCount(string $logsType): int
     {
-        return (int) abs($this->getConfig(self::GROUP_GENERAL, 'allowed_archives_count'));
+        switch ($logsType) {
+            case self::GROUP_FILES:
+                $value = $this->getConfig(self::GROUP_FILES, 'allowed_archives_count');
+                break;
+            default:
+                throw new NoSuchEntityException(
+                    __('Invalid log type "%1".', $logsType)
+                );
+        }
+
+        return (int) $value;
     }
 }

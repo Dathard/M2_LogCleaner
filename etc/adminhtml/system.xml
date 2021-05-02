@@ -4,27 +4,27 @@
         <tab id="dathard" translate="label" sortOrder="10">
             <label>Dathard</label>
         </tab>
-
         <section id="logcleaner" translate="label" sortOrder="1" showInDefault="1">
             <class>separator-top</class>
             <label>Log Cleaner</label>
             <tab>dathard</tab>
             <resource>Dathard_LogCleaner::config</resource>
-
             <group id="base" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="0">
                 <frontend_model>Dathard\LogCleaner\Block\Adminhtml\System\Config\Messages</frontend_model>
                 <attribute type="shared">1</attribute>
             </group>
-
-            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1">
-                <label>Log cleaner configuration</label>
+            <group id="log_files" translate="label" type="text" sortOrder="10" showInDefault="1">
+                <label>Сleaning log files</label>
                 <field id="enable" translate="label" type="select" sortOrder="1" showInDefault="1">
-                    <label>Module Enable</label>
+                    <label>Enable logs cleaning</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="period" translate="label" type="select" sortOrder="20" showInDefault="1">
                     <label>Rotation period</label>
-                    <source_model>Dathard\LogCleaner\Model\Config\Source\Period</source_model>
+                    <source_model>Dathard\LogCleaner\Model\Config\Source\LogFiles\Period</source_model>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
                 </field>
                 <field id="custom_period" translate="label" type="text" sortOrder="30" showInDefault="1">
                     <label>Custom period</label>
@@ -38,6 +38,23 @@
                     <label>Number of saved files</label>
                     <comment><![CDATA[Specify how many recent log files should be kept.]]></comment>
                     <validate>integer</validate>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </field>
+            </group>
+            <group id="db_logs" translate="label" type="text" sortOrder="10" showInDefault="1">
+                <label>Сleaning database logs</label>
+                <field id="enable" translate="label" type="select" sortOrder="1" showInDefault="1">
+                    <label>Enable logs cleaning</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="period" translate="label" type="select" sortOrder="20" showInDefault="1">
+                    <label>Rotation period</label>
+                    <source_model>Dathard\LogCleaner\Model\Config\Source\DbLogs\Period</source_model>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
                 </field>
             </group>
         </section>
