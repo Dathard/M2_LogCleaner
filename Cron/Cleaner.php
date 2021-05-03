@@ -3,39 +3,28 @@ declare(strict_types=1);
 
 namespace Dathard\LogCleaner\Cron;
 
-use Dathard\LogCleaner\Helper\Config;
-use Dathard\LogCleaner\Model\LogManagement;
+use Dathard\LogCleaner\Model\LogCleanerManager;
 
 class Cleaner
 {
     /**
-     * @var \Dathard\LogCleaner\Helper\Config
+     * @var \Dathard\LogCleaner\Model\LogCleanerManager
      */
-    private $config;
-
-    /**
-     * @var \Dathard\LogCleaner\Model\LogManagement
-     */
-    private $logManagement;
+    private $logCleanerManager;
 
     /**
      * Cleaner constructor.
-     * @param \Dathard\LogCleaner\Helper\Config $config
-     * @param \Dathard\LogCleaner\Model\LogManagement $logManagement
+     * @param \Dathard\LogCleaner\Model\LogCleanerManager   $logCleanerManager
      */
     public function __construct(
-        Config $config,
-        LogManagement $logManagement
+        LogCleanerManager   $logCleanerManager
     ) {
-        $this->config = $config;
-        $this->logManagement = $logManagement;
+        $this->logCleanerManager = $logCleanerManager;
     }
 
     public function execute()
     {
-        if ($this->config->enableLogsCleaning(Config::GROUP_FILES)) {
-            $this->logManagement->optimizeLogs();
-        }
+        $this->logCleanerManager->allLogsOptimization();
     }
 }
 
