@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Dathard\LogCleaner\Model;
+namespace Dathard\LogCleaner\Model\Management;
 
 use Magento\Framework\Filesystem\DirectoryList;
 use Magento\Framework\Filesystem\Driver\File;
