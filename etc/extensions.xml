@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<extensions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:noNamespaceSchemaLocation="urn:magento:module:Dathard_Base:etc/extensions.xsd">
+    <extension name="LogCleaner"
+               config_section = "logcleaner"
+               repository_name="Dathard/M2_LogCleaner"/>
+</extensions>

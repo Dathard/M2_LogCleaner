@@ -8,13 +8,12 @@ use Dathard\LogCleaner\Model\LogCleanerManager;
 class Cleaner
 {
     /**
-     * @var \Dathard\LogCleaner\Model\LogCleanerManager
+     * @var LogCleanerManager
      */
     private $logCleanerManager;
 
     /**
-     * Cleaner constructor.
-     * @param \Dathard\LogCleaner\Model\LogCleanerManager   $logCleanerManager
+     * @param LogCleanerManager $logCleanerManager
      */
     public function __construct(
         LogCleanerManager   $logCleanerManager

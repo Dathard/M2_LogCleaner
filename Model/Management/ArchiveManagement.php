@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Dathard\LogCleaner\Model\Management;
 
+use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Filesystem\DirectoryList;
 use Magento\Framework\Filesystem\Driver\File;
 use Magento\Framework\Archive\Zip;
@@ -11,25 +12,24 @@ use Magento\Framework\Filesystem\Glob;
 class ArchiveManagement
 {
     /**
-     * @var \Magento\Framework\Filesystem\DirectoryList
+     * @var DirectoryList
      */
     private $directoryList;
 
     /**
-     * @var \Magento\Framework\Filesystem\Driver\File
+     * @var File
      */
     private $filesystemDriver;
 
     /**
-     * @var \Magento\Framework\Archive\Zip
+     * @var Zip
      */
     private $zipArchive;
 
     /**
-     * ArchiveManagement constructor.
-     * @param \Magento\Framework\Filesystem\DirectoryList   $directoryList
-     * @param \Magento\Framework\Filesystem\Driver\File     $filesystemDriver
-     * @param \Magento\Framework\Archive\Zip                $zipArchive
+     * @param DirectoryList $directoryList
+     * @param File $filesystemDriver
+     * @param Zip $zipArchive
      */
     public function __construct(
         DirectoryList $directoryList,
@@ -80,7 +80,7 @@ class ArchiveManagement
      * @param string $filePath
      * @param string $destination
      * @return false|string
-     * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws FileSystemException
      */
     public function archivateFile(string $filePath, string $destination)
     {
@@ -102,7 +102,7 @@ class ArchiveManagement
      * @param string $pattern
      * @param int $allowedArchivesCount
      * @return bool
-     * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws FileSystemException
      */
     public function deleteOldArchives(string $pattern, int $allowedArchivesCount): bool
     {
