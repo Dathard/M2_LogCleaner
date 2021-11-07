@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Dathard\LogCleaner\Model\Config\Source\LogFiles;
 
-class Period implements \Magento\Framework\Option\ArrayInterface
+use Magento\Framework\Option\ArrayInterface;
+
+class Period implements ArrayInterface
 {
     const ONCE_A_DAY = 0;
     const ONCE_A_WEEK = 1;

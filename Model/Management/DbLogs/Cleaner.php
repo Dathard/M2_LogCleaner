@@ -7,9 +7,13 @@ use Dathard\LogCleaner\Model\Management\CleanerInterface;
 use Dathard\LogCleaner\Model\Config\Source\DbLogs\Period;
 use Dathard\LogCleaner\Helper\Config;
 use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\Exception\NoSuchEntityException;
 
 class Cleaner implements CleanerInterface
 {
+    /**
+     * @var string[]
+     */
     private $tablesToTruncate = [
         'report_event',
         'report_viewed_product_index',
@@ -18,19 +22,18 @@ class Cleaner implements CleanerInterface
     ];
 
     /**
-     * @var \Dathard\LogCleaner\Helper\Config
+     * @var Config
      */
     private $config;
 
     /**
-     * @var \Magento\Framework\App\ResourceConnection
+     * @var ResourceConnection
      */
     private $resourceConnection;
 
     /**
-     * Cleaner constructor.
-     * @param \Dathard\LogCleaner\Helper\Config         $config
-     * @param \Magento\Framework\App\ResourceConnection $resourceConnection
+     * @param Config $config
+     * @param ResourceConnection $resourceConnection
      */
     public function __construct(
         Config              $config,
@@ -42,6 +45,7 @@ class Cleaner implements CleanerInterface
 
     /**
      * @return CleanerInterface
+     * @throws NoSuchEntityException
      */
     public function run(): CleanerInterface
     {
@@ -54,7 +58,7 @@ class Cleaner implements CleanerInterface
 
     /**
      * @return bool
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws NoSuchEntityException
      */
     public function allowedToClean(): bool
     {
@@ -65,18 +69,19 @@ class Cleaner implements CleanerInterface
         $rotationPeriod = $this->config->getRotationPeriod(Config::GROUP_DB);
         switch ($rotationPeriod) {
             case Period::ONCE_A_DAY:
-                $alow = true;
+                $allow = true;
+                break;
             case Period::ONCE_A_WEEK:
-                $alow = date('w') == 1;
+                $allow = date('w') == 1;
                 break;
             case Period::ONCE_A_MONTH:
-                $alow = date('j') == 1;
+                $allow = date('j') == 1;
                 break;
             default:
-                $alow = false;
+                $allow = false;
         }
 
-        return (bool) $alow;
+        return $allow;
     }
 
     /**

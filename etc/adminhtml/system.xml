@@ -10,8 +10,7 @@
             <tab>dathard</tab>
             <resource>Dathard_LogCleaner::config</resource>
             <group id="base" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="0">
-                <frontend_model>Dathard\LogCleaner\Block\Adminhtml\System\Config\Messages</frontend_model>
-                <attribute type="shared">1</attribute>
+                <frontend_model>Dathard\Base\Block\Adminhtml\System\Config\Messages</frontend_model>
             </group>
             <group id="log_files" translate="label" type="text" sortOrder="10" showInDefault="1">
                 <label>Сleaning log files</label>

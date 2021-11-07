@@ -7,31 +7,32 @@ use Dathard\LogCleaner\Model\Management\CleanerInterface;
 use Dathard\LogCleaner\Model\Config\Source\LogFiles\Period;
 use Dathard\LogCleaner\Helper\Config;
 use Dathard\LogCleaner\Model\Management\ArchiveManagement;
+use Magento\Framework\Exception\FileSystemException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Filesystem\DirectoryList;
 use Magento\Framework\Filesystem\Glob;
 
 class Cleaner implements CleanerInterface
 {
     /**
-     * @var \Dathard\LogCleaner\Helper\Config
+     * @var Config
      */
     private $config;
 
     /**
-     * @var \Magento\Framework\Filesystem\DirectoryList
+     * @var DirectoryList
      */
     private $directoryList;
 
     /**
-     * @var \Dathard\LogCleaner\Model\Management\ArchiveManagement
+     * @var ArchiveManagement
      */
     private $archiveManagement;
 
     /**
-     * Cleaner constructor.
-     * @param \Dathard\LogCleaner\Helper\Config                         $config
-     * @param \Magento\Framework\Filesystem\DirectoryList               $directoryList
-     * @param \Dathard\LogCleaner\Model\Management\ArchiveManagement    $archiveManagement
+     * @param Config $config
+     * @param DirectoryList $directoryList
+     * @param ArchiveManagement $archiveManagement
      */
     public function __construct(
         Config $config,
@@ -45,6 +46,8 @@ class Cleaner implements CleanerInterface
 
     /**
      * @return CleanerInterface
+     * @throws FileSystemException
+     * @throws NoSuchEntityException
      */
     public function run(): CleanerInterface
     {
@@ -57,8 +60,8 @@ class Cleaner implements CleanerInterface
 
     /**
      * @return bool
-     * @throws \Magento\Framework\Exception\FileSystemException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws FileSystemException
+     * @throws NoSuchEntityException
      */
     public function allowedToClean(): bool
     {
@@ -75,16 +78,16 @@ class Cleaner implements CleanerInterface
                 if (count($archives) > 0) {
                     arsort($archives);
                     $lastDate = array_shift($archives);
-                    $alow = date('d') != date('d', $lastDate);
+                    $allow = date('d') != date('d', $lastDate);
                 } else {
-                    $alow = true;
+                    $allow = true;
                 }
                 break;
             case Period::ONCE_A_WEEK:
-                $alow = date('w') == 1;
+                $allow = date('w') == 1;
                 break;
             case Period::ONCE_A_MONTH:
-                $alow = date('d') == 1;
+                $allow = date('d') == 1;
                 break;
             case Period::CUSTOM_PERIOD:
                 $logDir = $this->directoryList->getPath('log');
@@ -94,19 +97,19 @@ class Cleaner implements CleanerInterface
                 $lastDate = array_shift($archives);
                 $dateDiff = abs(time() - $lastDate) / 86400;
 
-                $alow = $dateDiff >= $this->config->getCustomRotationPeriod(Config::GROUP_FILES);
+                $allow = $dateDiff >= $this->config->getCustomRotationPeriod(Config::GROUP_FILES);
                 break;
             default:
-                $alow = false;
+                $allow = false;
         }
 
-        return (bool) $alow;
+        return $allow;
     }
 
     /**
      * @return CleanerInterface
-     * @throws \Magento\Framework\Exception\FileSystemException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws FileSystemException
+     * @throws NoSuchEntityException
      */
     private function cleaning(): CleanerInterface
     {

@@ -19,7 +19,6 @@ class LogCleanerManager
     private $logFilesCleaner;
 
     /**
-     * LogCleanerManager constructor.
      * @param DbLogsCleaner $dbLogsCleaner
      * @param LogFilesCleaner $logFilesCleaner
      */
